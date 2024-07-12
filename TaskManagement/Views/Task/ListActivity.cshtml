@@ -1,0 +1,109 @@
+﻿@model TaskManagement.ViewModels.TaskViewModel
+
+@{
+    ViewBag.Title = "AddActivity";
+}
+
+<h2>List Activity</h2>
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+<div class="form-horizontal">
+    <h4>Activity</h4>
+    <div>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Task.TaskName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Task.TaskName)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Task.Tags)
+            </dt>
+
+            <dd>
+                @String.Join(", ", Model.Task.Tags)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Task.DueDate)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Task.DueDate)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Task.Color)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Task.Color)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Task.AssignedTo)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Task.AssignedTo)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Task.Status)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Task.Status)
+            </dd>
+            <dt>
+                @Html.ActionLink("AddActivity", "AddActivity", new { taskid = Model.Task.Id })
+
+            </dt>
+        </dl>
+    </div>
+
+
+    <h3>Activities</h3>
+
+    @if (Model.Activities != null && Model.Activities.Any())
+    {
+        <table class="table">
+            <tr>
+                <th>Activity Date</th>
+                <th>Done By</th>
+                <th>Description</th>
+            </tr>
+
+            @foreach (var item in Model.Activities)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.ActivityDate)</td>
+                    <td>@Html.DisplayFor(modelItem => item.DoneBy)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ActivityDescription)</td>
+                    <td>
+                        @Html.ActionLink("EditActivity", "EditActivity", new { id = item.Id }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+    else
+    {
+        <p>No Activity found.</p>
+    }
+
+</div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

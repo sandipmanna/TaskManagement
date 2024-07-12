@@ -1,0 +1,96 @@
+﻿@model DataAccess.Models.AssignedTask
+
+@{
+    ViewBag.Title = "Task Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.TaskName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TaskName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Tags)
+        </dt>
+
+        <dd>
+            @String.Join(", ", Model.Tags)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DueDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DueDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Color)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Color)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AssignedTo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AssignedTo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+
+    </dl>
+</div>
+
+<h3>Activities</h3>
+
+@if (Model.Activities != null && Model.Activities.Any())
+{
+    <table class="table">
+        <tr>
+            <th>Activity Date</th>
+            <th>Done By</th>
+            <th>Description</th>
+        </tr>
+
+        @foreach (var item in Model.Activities)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.ActivityDate)</td>
+                <td>@Html.DisplayFor(modelItem => item.DoneBy)</td>
+                <td>@Html.DisplayFor(modelItem => item.ActivityDescription)</td>
+                <td>
+                    @Html.ActionLink("EditActivity", "EditActivity", new { id = item.Id }) |
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <p>No Activity found.</p>
+}
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -41,7 +41,7 @@ namespace TaskManagement.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (task.TagValues != string.Empty)
+                if (task.TagValues != null)
                     task.Tags = task.TagValues.Split(',').ToList();
                 await _taskService.AddTaskAsync(task);
                 return RedirectToAction("Index");
@@ -91,27 +91,40 @@ namespace TaskManagement.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (model.Criteria.TagValues != null)
+                    model.Criteria.Tags = model.Criteria.TagValues.Split(',').ToList();
                 model.Tasks = await _taskService.SearchTasksAsync(model.Criteria);
             }
 
             return View(model);
         }
 
-        public async Task<ActionResult> AddActivity(int taskId)
+        public async Task<ActionResult> ListActivity(int taskId)
         {
             var task = await _taskService.GetTaskByIdAsync(taskId);
             return View(new TaskViewModel { Task = task, Activities = new List<Activity>() });
         }
 
+        public async Task<ActionResult> EditActivity(int id)
+        {
+            var task = await _taskService.GetTaskByIdAsync(id);
+            return View(task);
+        }
+
+        public ActionResult AddActivity()
+        {
+            return View();
+        }
+
         [HttpPost]
-        public async Task<ActionResult> AddActivity(int taskId, Activity activity)
+        public async Task<ActionResult> AddActivity(int taskid, Activity activity)
         {
             if (ModelState.IsValid)
             {
-                var task = await _taskService.GetTaskByIdAsync(taskId);
+                var task = await _taskService.GetTaskByIdAsync(taskid);
                 task.Activities.Add(activity);
                 await _taskService.UpdateTaskAsync(task);
-                return RedirectToAction("Details", new { id = taskId });
+                return RedirectToAction("Details", new { id = taskid });
             }
 
             return View(activity);

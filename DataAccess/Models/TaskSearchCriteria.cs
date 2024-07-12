@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -14,7 +15,10 @@ namespace DataAccess.Models
 
         [JsonPropertyName("tags")]
         public List<string> Tags { get; set; }
-        
+
+        [NotMapped]
+        public string TagValues { get; set; }
+
         [JsonPropertyName("startDate")]
         public DateTime? StartDate { get; set; }
         

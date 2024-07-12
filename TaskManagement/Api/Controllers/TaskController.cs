@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Routing;
 using DataAccess.Components.Interface;
 using DataAccess.Models;
 
@@ -70,10 +71,29 @@ namespace TaskManagement.Api.Controllers
 
         [HttpPost]
         [Route("api/Task/search")]
-        public async Task<IHttpActionResult> SearchTasks([FromBody] TaskSearchCriteria criteria)
+        public async Task<IHttpActionResult> SearchTasks(TaskSearchCriteria criteria)
         {
             var tasks = await _taskService.SearchTasksAsync(criteria.TaskName, criteria.Tags, criteria.StartDate, criteria.EndDate, criteria.Statuses);
             return Ok(tasks);
+        }
+
+        [HttpGet]
+        [Route("api/Task/{id}/Activity")]
+        public async Task<IHttpActionResult> GetActivity(int id)
+        {
+            var tasks = await _taskService.GetActivityByIdAsync(id);
+            return Ok(tasks);
+        }
+
+        [HttpPost]
+        [Route("api/Task/{id}/AddActivity")]
+        public async Task<IHttpActionResult> AddActivity(Activity activity)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest("Not a valid model");
+
+            await _taskService.AddActivityAsync(activity);
+            return Ok(activity);
         }
     }
 }

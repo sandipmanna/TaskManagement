@@ -72,8 +72,8 @@ namespace TaskManagement.Services
 
         public async Task<List<AssignedTask>> SearchTasksAsync(TaskSearchCriteria criteria)
         {
-            var content = new StringContent(JsonConvert.SerializeObject(criteria), Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync("api/task/search", content);
+            var content = new StringContent(JsonConvert.SerializeObject(criteria, GetSerializerSettings()), Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync("api/Task/search", content);
             response.EnsureSuccessStatusCode();
             var responseString = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<List<AssignedTask>>(responseString, GetSerializerSettings());

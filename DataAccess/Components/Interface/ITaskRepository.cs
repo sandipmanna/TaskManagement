@@ -16,5 +16,8 @@ namespace DataAccess.Components.Interface
         Task UpdateAsync(int id, AssignedTask task);
         Task DeleteAsync(int id);
         Task<List<AssignedTask>> SearchAsync(string taskName, List<string> tags, DateTime? startDate, DateTime? endDate, List<string> statuses);
+
+        Task<Activity> GetActivityByIdAsync(int id);
+        Task AddActivityAsync(Activity aactivity);
     }
 }

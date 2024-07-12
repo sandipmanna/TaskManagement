@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace DataAccess.Models
         public int Id { get; set; }
 
         [JsonPropertyName("task_name")]
+        [DisplayName("Task Name")]
         public string TaskName { get; set; }
 
         [JsonPropertyName("tags")]
@@ -24,12 +26,14 @@ namespace DataAccess.Models
 
         [JsonPropertyName("due_date")]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [DisplayName("Due Date")]
         public DateTime DueDate { get; set; }
 
         [JsonPropertyName("color")]
         public string Color { get; set; }
 
         [JsonPropertyName("assigned_to")]
+        [DisplayName("Assigned To")]
         public string AssignedTo { get; set; }
 
         [JsonPropertyName("status")]

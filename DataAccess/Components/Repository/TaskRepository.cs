@@ -21,7 +21,7 @@ namespace DataAccess.Components.Repository
             _dataContext = new EFDataContext();
         }
 
-        private void UpdateTags(AssignedTask task)
+        private void GetTags(AssignedTask task)
         {
             task.Tags = _dataContext
                     .Tags
@@ -33,10 +33,9 @@ namespace DataAccess.Components.Repository
         public async Task<List<AssignedTask>> GetAllAsync()
         {
             var tasks = _dataContext.Tasks.ToList();
-
             foreach (var task in tasks)
             {
-                UpdateTags(task);
+                GetTags(task);
             }
 
             return await Task.FromResult(tasks);
@@ -47,10 +46,8 @@ namespace DataAccess.Components.Repository
             var task = _dataContext
                 .Tasks
                 .Where(t => t.Id == id)
-                .Include(t => t.Activities)
                 .FirstOrDefault();
-
-            UpdateTags(task);
+            GetTags(task);
 
             return await Task.FromResult(task);
         }
@@ -80,6 +77,7 @@ namespace DataAccess.Components.Repository
                 entity.Color = task.Color;
                 entity.AssignedTo = task.AssignedTo;
                 entity.Status = task.Status;
+                entity.Activities = task.Activities;
                 await _dataContext.SaveChangesAsync();
             }
         }
@@ -97,12 +95,13 @@ namespace DataAccess.Components.Repository
         public async Task<List<AssignedTask>> SearchAsync(string taskName, List<string> tags, DateTime? startDate, DateTime? endDate, List<string> statuses)
         {
             var query = _dataContext.Tasks.AsQueryable();
-
-            var taskIds = _dataContext
-                .Tags
-                .Where(t => tags.Contains(t.Name))
-                .Select(tag => tag.Task.Id)
-                .ToList();
+            List<int> taskIds = new List<int>(); 
+            if (tags != null && tags.Any())
+                taskIds = _dataContext
+                    .Tags
+                    .Where(t => tags.Contains(t.Name))
+                    .Select(tag => tag.Task.Id)
+                    .ToList();
 
             if (!string.IsNullOrEmpty(taskName))
             {
@@ -127,10 +126,28 @@ namespace DataAccess.Components.Repository
             var tasks = query.Include(t => t.Activities).ToList();
             foreach (var task in tasks)
             {
-                UpdateTags(task);
+                GetTags(task);
             }
 
             return await Task.FromResult(tasks);
+        }
+
+        public async Task<Activity> GetActivityByIdAsync(int id)
+        {
+            var activity = _dataContext
+                .Activities
+                .Where(a => a.Task.Id == id)
+                .Include(t => t.Task)
+                .FirstOrDefault();
+
+            return await Task.FromResult(activity);
+        }
+
+        public async Task AddActivityAsync(Activity activity)
+        {
+            _dataContext.Activities.Add(activity);
+
+            await _dataContext.SaveChangesAsync();
         }
     }
 }

@@ -44,5 +44,15 @@ namespace DataAccess.Components.Services
         {
             return await _taskRepository.SearchAsync(taskName, tags, startDate, endDate, statuses);
         }
+
+        public async Task<Activity> GetActivityByIdAsync(int id)
+        {
+            return await _taskRepository.GetActivityByIdAsync(id);
+        }
+
+        public async Task AddActivityAsync(Activity activity)
+        {
+            await _taskRepository.AddActivityAsync(activity);
+        }
     }
 }
