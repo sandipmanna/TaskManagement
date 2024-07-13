@@ -25,7 +25,6 @@
             @Html.LabelFor(model => model.Criteria.Tags, "Tags", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Criteria.TagValues, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Criteria.TagValues, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -33,7 +32,6 @@
             @Html.LabelFor(model => model.Criteria.StartDate, "Start Date", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Criteria.StartDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Criteria.StartDate, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -41,15 +39,13 @@
             @Html.LabelFor(model => model.Criteria.EndDate, "End Date", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Criteria.EndDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Criteria.EndDate, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Criteria.Statuses, "Statuses", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Criteria.Status, "Status", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Criteria.Statuses, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Criteria.Statuses, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.Criteria.Status, new { htmlAttributes = new { @class = "form-control" } })
             </div>
         </div>
 

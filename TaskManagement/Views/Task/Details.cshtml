@@ -61,6 +61,7 @@
 </div>
 
 <h3>Activities</h3>
+@Html.ActionLink("Add New Activity", "AddActivity", new { taskId = Model.Id })
 
 @if (Model.Activities != null && Model.Activities.Any())
 {
@@ -78,9 +79,8 @@
                 <td>@Html.DisplayFor(modelItem => item.DoneBy)</td>
                 <td>@Html.DisplayFor(modelItem => item.ActivityDescription)</td>
                 <td>
-                    @Html.ActionLink("EditActivity", "EditActivity", new { id = item.Id }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                    @Html.ActionLink("Edit", "EditActivity", new { id = item.Id, taskId = Model.Id }) |
+                    @Html.ActionLink("Delete", "DeleteActivity", new { id = item.Id, taskId = Model.Id })
                 </td>
             </tr>
         }

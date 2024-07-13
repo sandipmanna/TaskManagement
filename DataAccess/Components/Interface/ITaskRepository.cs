@@ -10,14 +10,16 @@ namespace DataAccess.Components.Interface
 {
     public interface ITaskRepository
     {
-        Task<List<AssignedTask>> GetAllAsync();
-        Task<AssignedTask> GetByIdAsync(int id);
-        Task AddAsync(AssignedTask task);
-        Task UpdateAsync(int id, AssignedTask task);
-        Task DeleteAsync(int id);
+        Task<List<AssignedTask>> GetAllTaskAsync();
+        Task<AssignedTask> GetTaskByIdAsync(int id);
+        Task AddTaskAsync(AssignedTask task);
+        Task UpdateTaskAsync(int id, AssignedTask task);
+        Task DeleteTaskAsync(int id);
         Task<List<AssignedTask>> SearchAsync(string taskName, List<string> tags, DateTime? startDate, DateTime? endDate, List<string> statuses);
 
+        Task AddActivityAsync(Activity activity);
         Task<Activity> GetActivityByIdAsync(int id);
-        Task AddActivityAsync(Activity aactivity);
+        Task UpdateActivityAsync(Activity aactivity);
+        Task DeleteActivityAsync(int Id);
     }
 }

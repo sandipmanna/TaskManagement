@@ -78,5 +78,33 @@ namespace TaskManagement.Services
             var responseString = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<List<AssignedTask>>(responseString, GetSerializerSettings());
         }
+
+        public async Task AddActivityAsync(Activity activity)
+        {
+            var content = new StringContent(JsonConvert.SerializeObject(activity, GetSerializerSettings()), Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync($"api/Task/{activity.TaskId}/AddActivity", content);
+            response.EnsureSuccessStatusCode();
+        }
+
+        public async Task UpdateActivityAsync(Activity activity)
+        {
+            var content = new StringContent(JsonConvert.SerializeObject(activity, GetSerializerSettings()), Encoding.UTF8, "application/json");
+            var response = await _httpClient.PutAsync($"api/UpdateActivity/{activity.Id}", content);
+            response.EnsureSuccessStatusCode();
+        }
+
+        public async Task<Activity> GetActivityByIdAsync(int id)
+        {
+            var response = await _httpClient.GetAsync($"api/Task/{id}/Activity");
+            response.EnsureSuccessStatusCode();
+            var responseString = await response.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<Activity>(responseString, GetSerializerSettings());
+        }
+
+        public async Task DeleteActivityAsync(int id)
+        {
+            var response = await _httpClient.DeleteAsync($"api/Task/Activity/{id}");
+            response.EnsureSuccessStatusCode();
+        }
     }
 }

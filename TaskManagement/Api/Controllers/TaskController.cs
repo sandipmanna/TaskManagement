@@ -63,7 +63,7 @@ namespace TaskManagement.Api.Controllers
         }
 
         [HttpDelete]
-        public async Task<IHttpActionResult> DeleteTask(int id)
+        public async Task<IHttpActionResult> DeleteTaskAsync(int id)
         {
             await _taskService.DeleteTaskAsync(id);
             return Ok();
@@ -77,14 +77,6 @@ namespace TaskManagement.Api.Controllers
             return Ok(tasks);
         }
 
-        [HttpGet]
-        [Route("api/Task/{id}/Activity")]
-        public async Task<IHttpActionResult> GetActivity(int id)
-        {
-            var tasks = await _taskService.GetActivityByIdAsync(id);
-            return Ok(tasks);
-        }
-
         [HttpPost]
         [Route("api/Task/{id}/AddActivity")]
         public async Task<IHttpActionResult> AddActivity(Activity activity)
@@ -94,6 +86,33 @@ namespace TaskManagement.Api.Controllers
 
             await _taskService.AddActivityAsync(activity);
             return Ok(activity);
+        }
+
+        [HttpGet]
+        [Route("api/Task/{id}/Activity")]
+        public async Task<IHttpActionResult> GetActivity(int id)
+        {
+            var tasks = await _taskService.GetActivityByIdAsync(id);
+            return Ok(tasks);
+        }
+
+        [HttpPut]
+        [Route("api/UpdateActivity/{id}")]
+        public async Task<IHttpActionResult> UpdateActivity(Activity activity)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest("Not a valid model");
+
+            await _taskService.UpdateActivityAsync(activity);
+            return Ok(activity);
+        }
+
+        [HttpDelete]
+        [Route("api/Task/Activity/{id}")]
+        public async Task<IHttpActionResult> DeleteActivityAsync(int id)
+        {
+            await _taskService.DeleteActivityAsync(id);
+            return Ok();
         }
     }
 }

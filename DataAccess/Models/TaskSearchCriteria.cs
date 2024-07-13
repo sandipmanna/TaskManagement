@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -24,8 +25,12 @@ namespace DataAccess.Models
         
         [JsonPropertyName("endDate")]
         public DateTime? EndDate { get; set; }
-        
+
         [JsonPropertyName("status")]
         public List<string> Statuses { get; set; }
+
+        [NotMapped]
+        public string Status { get; set; }
+
     }
 }

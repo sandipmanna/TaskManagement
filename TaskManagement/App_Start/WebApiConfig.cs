@@ -22,10 +22,14 @@ namespace TaskManagement
             );
 
             config.Formatters.JsonFormatter.SerializerSettings.ContractResolver =
-                new DefaultContractResolver 
-                { 
-                    NamingStrategy = new SnakeCaseNamingStrategy() 
+                new DefaultContractResolver
+                {
+                    NamingStrategy = new SnakeCaseNamingStrategy()
                 };
+
+            config.Formatters.JsonFormatter.SerializerSettings
+                .ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            config.Formatters.Remove(config.Formatters.XmlFormatter);
         }
     }
 }

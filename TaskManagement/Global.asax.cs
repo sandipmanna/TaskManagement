@@ -19,6 +19,28 @@ namespace TaskManagement
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+        }
+
+        protected void Application_Error(object sender, EventArgs e)
+        {
+            Exception exceptionObject = Server.GetLastError();
+            if (exceptionObject != null)
+            {
+                if (exceptionObject.InnerException != null)
+                {
+                    exceptionObject = exceptionObject.InnerException;
+                }
+                switch (exceptionObject.GetType().ToString())
+                {
+                    case "System.Threading.ThreadAbortException":
+                        HttpContext.Current.Server.ClearError();
+                        break;
+                    default:
+                        ErrorLogService.LogError(exceptionObject); 
+                        break;
+                }
+            }
         }
     }
 }

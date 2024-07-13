@@ -30,7 +30,7 @@ namespace DataAccess.Components.Repository
                     .ToList();
         }
 
-        public async Task<List<AssignedTask>> GetAllAsync()
+        public async Task<List<AssignedTask>> GetAllTaskAsync()
         {
             var tasks = _dataContext.Tasks.ToList();
             foreach (var task in tasks)
@@ -41,18 +41,27 @@ namespace DataAccess.Components.Repository
             return await Task.FromResult(tasks);
         }
 
-        public async Task<AssignedTask> GetByIdAsync(int id)
+        public async Task<AssignedTask> GetTaskByIdAsync(int id)
         {
-            var task = _dataContext
-                .Tasks
-                .Where(t => t.Id == id)
-                .FirstOrDefault();
-            GetTags(task);
+            try
+            {
+                var task = _dataContext
+                    .Tasks
+                    .Where(t => t.Id == id)
+                    .Include(t => t.Activities)
+                    .FirstOrDefault();
+                GetTags(task);
 
-            return await Task.FromResult(task);
+                return await Task.FromResult(task);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
         }
 
-        public async Task AddAsync(AssignedTask task)
+        public async Task AddTaskAsync(AssignedTask task)
         {
             _dataContext.Tasks.Add(task);
 
@@ -65,7 +74,7 @@ namespace DataAccess.Components.Repository
             await _dataContext.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(int id, AssignedTask task)
+        public async Task UpdateTaskAsync(int id, AssignedTask task)
         {
             var entity = _dataContext.Tasks.FirstOrDefault(n => n.Id == id);
 
@@ -82,12 +91,14 @@ namespace DataAccess.Components.Repository
             }
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteTaskAsync(int id)
         {
-            var task = await _dataContext.Tasks.FindAsync(id);
+            var task = _dataContext.Tasks.SingleOrDefault(t => t.Id == id);
             var tags = _dataContext.Tags.Where(t => t.Task.Id == id);
+            var activities = _dataContext.Activities.Where(a => a.Task.Id == id);
 
             _dataContext.Tags.RemoveRange(tags);
+            _dataContext.Activities.RemoveRange(activities);
             _dataContext.Tasks.Remove(task);
             await _dataContext.SaveChangesAsync();
         }
@@ -124,6 +135,10 @@ namespace DataAccess.Components.Repository
             }
 
             var tasks = query.Include(t => t.Activities).ToList();
+
+            if (tags?.Count() > 0 && taskIds.Count() == 0)
+                tasks = new List<AssignedTask>();
+
             foreach (var task in tasks)
             {
                 GetTags(task);
@@ -132,21 +147,45 @@ namespace DataAccess.Components.Repository
             return await Task.FromResult(tasks);
         }
 
+        public async Task AddActivityAsync(Activity activity)
+        {
+            _dataContext.Activities.Add(activity);
+
+            await _dataContext.SaveChangesAsync();
+        }
+
         public async Task<Activity> GetActivityByIdAsync(int id)
         {
             var activity = _dataContext
                 .Activities
-                .Where(a => a.Task.Id == id)
-                .Include(t => t.Task)
+                .Where(a => a.Id == id)
+                .Include(a => a.Task)
                 .FirstOrDefault();
 
             return await Task.FromResult(activity);
         }
 
-        public async Task AddActivityAsync(Activity activity)
+        public async Task UpdateActivityAsync(Activity activity)
         {
-            _dataContext.Activities.Add(activity);
+            var entity = _dataContext
+                .Activities
+                .Include(a => a.Task)
+                .FirstOrDefault(a => a.Id == activity.Id);
 
+            if (entity != null)
+            {
+                entity.ActivityDate = activity.ActivityDate;
+                entity.DoneBy = activity.DoneBy;
+                entity.ActivityDescription = activity.ActivityDescription;
+                await _dataContext.SaveChangesAsync();
+            }
+        }
+
+        public async Task DeleteActivityAsync(int id)
+        {
+            var activity = await _dataContext.Activities.FindAsync(id);
+
+            _dataContext.Activities.Remove(activity);
             await _dataContext.SaveChangesAsync();
         }
     }
